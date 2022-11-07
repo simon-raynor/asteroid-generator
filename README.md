@@ -12,4 +12,4 @@ Randomly creates procedural 3D "asteroids" by distorting the points of the plato
 - Fine tune the output
 - Fine tune performance
 - Turn it into some sort of module so I can...
-- build something to consume this! :D
+- ...build something to consume this! :D
