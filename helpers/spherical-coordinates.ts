@@ -1,37 +1,49 @@
 const {
+    abs,
     sin,
     cos,
     sqrt,
     atan,
-    acos,
     PI
 } = Math;
 
 export function cartesianToSpherical(
     cartesian: Array<[number, number, number]>,
 
-    // radiusOverride is only useful if we **know** that
+    // precalcRadii is only useful if we **know** that
     // all the points are arranged a fix distance from the
     // origin
-    radiusOverride?: number
+    precalcRadii: boolean = false
 ): Array<[number, number, number]> {
+
+    let radiusOverride = null,
+        xyDistanceOverride = null;
+    
+    if (precalcRadii) {
+        const [x, y, z] = cartesian[0];
+
+        radiusOverride = sqrt((x*x) + (y*y) + (z*z));
+        xyDistanceOverride = sqrt((x*x) + (y*y));
+    }
+
     return cartesian.map(
         ([x, y, z]) => {
             // TODO: test that a truthy || avoids the sqrt 
             const radius = radiusOverride || sqrt((x*x) + (y*y) + (z*z));
+            const xyDistance = xyDistanceOverride || sqrt((x*x) + (y*y));
 
-            let inclination = atan(y/x);
+            let inclination = x ? atan(y/x) : PI / 2;
 
             if (x < 0) {
-                //quadrant II & III
                 inclination += PI;
             } else if (y < 0) {
-                // quadrant IV
-                inclination += PI * 2;
+                inclination += (PI * 2);
             }
 
-            const azimuth = acos(z/radius);
-    
+            const azimuth = z
+                            ? atan( xyDistance / z )
+                            : PI / 2;
+
             return [radius, inclination, azimuth];
         }
     )
@@ -45,11 +57,24 @@ export function sphericalToCartesian(
         ([r, inclination, azimuth]) => {
             const radius = radiusOverride || r;
 
-            return [
-                radius * sin(azimuth) * cos(inclination),
-                radius * sin(inclination) * sin(azimuth),
-                radius * cos(azimuth)
-            ]
+            let x = abs(radius * sin(azimuth) * cos(inclination)),
+                y = abs(radius * sin(azimuth) * sin(inclination)),
+                z = abs(radius * cos(azimuth));
+
+            // for some reason there's bugs with the +/- signs
+            // which this fixes
+            if (inclination > PI / 2 && inclination < 3 * PI / 2) {
+                // x must be negative
+                x *= -1;
+            }
+            if (inclination > PI) {
+                y *=-1;
+            }
+            if (azimuth < 0) {
+                z *= -1;
+            }
+
+            return [x, y, z];
         }
     )
 }

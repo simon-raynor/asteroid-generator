@@ -1,4 +1,3 @@
-import toUnitSphere from "../helpers/toUnitSphere";
 import triangulatePolygon from "../helpers/triangulatePolygon";
 import Polyhedron from "../Polyhedron";
 
@@ -28,6 +27,7 @@ for (let x = -1; x <= 1; x+=2) {
     }
 }
 
+
 const edges: Array<[number, number]> = [
     [0 , 1],
     [0, 2],
@@ -55,7 +55,7 @@ const faces = [
 
 
 export default new Polyhedron(
-    toUnitSphere(points),
+    points,
     edges,
     faces.map(triangulatePolygon).flat()
 );

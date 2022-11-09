@@ -8,17 +8,22 @@ import { cartesianToSpherical, sphericalToCartesian } from "./helpers/spherical-
 
 import tetrahedron from "./platonics/tetrahedron.js";
 import cube from "./platonics/cube.js";
+import octahedron from "./platonics/octahedron.js";
 
 
 
-function generate(
-    pointCount: 4 | 8
+export function generate(
+    pointCount: 4 | 6 | 8,
+    radiusOverride: number = 1
 ) {
     let points = [];
 
     switch (pointCount) {
         case 4:
             points = tetrahedron.points;
+            break;
+        case 6:
+            points = octahedron.points;
             break;
         case 8:
             points = cube.points;
@@ -33,7 +38,7 @@ function generate(
         spherical.map(
             ([radius, inclination, azimuth]) => {
                 return [
-                    radius,
+                    radiusOverride || radius,
                     inclination + (maxVariance * random1()),
                     azimuth + (maxVariance * random1())
                 ];
@@ -44,17 +49,4 @@ function generate(
 
 function random1() {
     return 2 * (0.5 - Math.random());
-}
-
-
-for (let i = 0; i < 5; i++) {
-    const pts = generate(8);
-
-    console.log(
-        cube._faces.map(
-            face => face.map(
-                ptIdx => pts[ptIdx]
-            ).reverse()
-        )
-    );
 }

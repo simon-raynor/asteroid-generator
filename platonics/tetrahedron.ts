@@ -1,4 +1,3 @@
-import toUnitSphere from "../helpers/toUnitSphere";
 import Polyhedron from "../Polyhedron";
 
 //
@@ -37,9 +36,7 @@ const faces = [
 
 
 export default new Polyhedron(
-    toUnitSphere(
-        points
-    ),
+    points,
     edges,
     faces
 );

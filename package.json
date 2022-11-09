@@ -2,7 +2,7 @@
   "name": "asteroid-generator",
   "version": "0.0.1",
   "description": "randomly generates points in 3-space which can be used to draw asteroids",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"tests TBD\"",
     "build": "tsc index.ts",

@@ -1,3 +1,5 @@
+import { cartesianToSpherical, sphericalToCartesian } from "./helpers/spherical-coordinates";
+
 type Point = [number, number, number];
 
 // edge containes pairs of *inidices* (of points)...
@@ -23,6 +25,21 @@ export default class Polyhedron {
 
     get points(): Array<Point> {
         return this._points.slice();
+    }
+
+    log() {
+        const { points } = this;
+
+        const rads = (theta: number) => `${
+            Math.round(100000 * theta / Math.PI) / 100000
+        }π`;
+
+        console.log(
+            points,
+            cartesianToSpherical(points).map(
+                ([r, i, a]) => [`${r} (${r * r})`, rads(i), rads(a)]
+            )
+        );
     }
 }
 
